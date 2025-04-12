@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -37,9 +36,6 @@ func NewConfig() (cfg *Config) {
 	}
 
 	migrationPath := "file://" + filepath.Join(wd, "migrations", "postgres")
-	fmt.Println(">>>>>>>>>>>>>>>>>>>>>>>>>>")
-	fmt.Println(migrationPath)
-	fmt.Println(">>>>>>>>>>>>>>>>>>>>>>>>>>")
 
 	cfg.AppPort = cast.ToString(getEnvOrSetDefault("APP_PORT", "3000"))
 	cfg.AppHost = cast.ToString(getEnvOrSetDefault("APP_HOST", "localhost"))

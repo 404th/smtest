@@ -20,6 +20,9 @@ func NewEngine(cfg *config.Config, h *handler.Handler) *gin.Engine {
 	authGroup.Use(middleware.AuthMiddleware(cfg))
 	{
 		authGroup.GET("/movie")
+		authGroup.POST("/movies", h.CreateMovie)
+		authGroup.GET("/movies", h.GetAllMovies)
+		authGroup.GET("/movie/:id", h.GetAllMovies)
 	}
 
 	return r

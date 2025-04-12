@@ -35,10 +35,11 @@ type AuthInterface interface {
 }
 
 type MoviesInterface interface {
-	Create(ctx *context.Context, req *model.CreateMovieRequest) (resp *model.Id, err error)
+	CreateMovie(ctx *context.Context, req *model.CreateMovieRequest) (resp *model.Id, err error)
 	GetAllMovies(ctx *context.Context, req *model.GetAllMoviesRequest) (resp *model.GetAllMoviesResponse, err error)
 	GetMovieById(ctx *context.Context, req *model.Id) (resp *model.Movie, err error)
 	DeleteMovie(ctx *context.Context, req *model.Id) (err error)
+	UpdateMovie(ctx *context.Context, input *model.UpdateMovieRequest) (resp *model.Movie, err error)
 }
 
 func (r *repository) Auth() AuthInterface {

@@ -20,8 +20,13 @@ func NewMovieService(config *config.Config, movieRepository repository.MoviesInt
 	}
 }
 
-func (r *movieService) Create(ctx *context.Context, req *model.CreateMovieRequest) (resp *model.Id, err error) {
+func (r *movieService) CreateMovie(ctx *context.Context, req *model.CreateMovieRequest) (resp *model.Id, err error) {
 	resp = &model.Id{}
+
+	resp, err = r.movieRepository.CreateMovie(ctx, req)
+	if err != nil {
+		return
+	}
 
 	return
 }
@@ -29,15 +34,36 @@ func (r *movieService) Create(ctx *context.Context, req *model.CreateMovieReques
 func (r *movieService) GetAllMovies(ctx *context.Context, req *model.GetAllMoviesRequest) (resp *model.GetAllMoviesResponse, err error) {
 	resp = &model.GetAllMoviesResponse{}
 
+	resp, err = r.movieRepository.GetAllMovies(ctx, req)
+	if err != nil {
+		return
+	}
+
 	return
 }
 
 func (r *movieService) GetMovieById(ctx *context.Context, req *model.Id) (resp *model.Movie, err error) {
 	resp = &model.Movie{}
 
+	resp, err = r.movieRepository.GetMovieById(ctx, req)
+	if err != nil {
+		return
+	}
+
 	return
 }
 
 func (r *movieService) DeleteMovie(ctx *context.Context, req *model.Id) (err error) {
+	return r.movieRepository.DeleteMovie(ctx, req)
+}
+
+func (r *movieService) UpdateMovie(ctx *context.Context, req *model.UpdateMovieRequest) (resp *model.Movie, err error) {
+	resp = &model.Movie{}
+
+	resp, err = r.movieRepository.UpdateMovie(ctx, req)
+	if err != nil {
+		return
+	}
+
 	return
 }
