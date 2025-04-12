@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/404th/smtest/api/handler/validation"
 	"github.com/404th/smtest/internal/repository/model"
@@ -36,10 +37,20 @@ func (h *Handler) CreateMovie(c *gin.Context) {
 
 func (h *Handler) GetMovieById(c *gin.Context) {
 	var req model.Id
-	if err := c.ShouldBindJSON(&req); err != nil {
+	if c.Param("id") == "" {
+		err := errors.New("id kiritilishi kerak")
 		handleErrorResponse(c, err)
 		return
 	}
+
+	idInt, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		err := errors.New("id noto'g'ri formatda kiritilgan")
+		handleErrorResponse(c, err)
+		return
+	}
+
+	req.Id = uint(idInt)
 
 	ctx := c.Request.Context()
 
@@ -93,6 +104,15 @@ func (h *Handler) UpdateMovies(c *gin.Context) {
 		handleErrorResponse(c, err)
 		return
 	}
+
+	idInt, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		err := errors.New("id noto'g'ri formatda kiritilgan")
+		handleErrorResponse(c, err)
+		return
+	}
+
+	req.Id = uint(idInt)
 
 	ctx := c.Request.Context()
 

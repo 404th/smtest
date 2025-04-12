@@ -15,20 +15,19 @@ func NewEngine(cfg *config.Config, h *handler.Handler) *gin.Engine {
 	r.POST("/login", h.Login)
 	r.POST("/register", h.Register)
 
-	// Protected routes
-	authGroup := r.Group("/api")
-	authGroup.Use(middleware.AuthMiddleware(cfg))
+	// Protected movies apiss
+	movies := r.Group("/movies", middleware.AuthMiddleware(cfg))
 	{
-		authGroup.GET("/movie")
-		authGroup.POST("/movies", h.CreateMovie)
-		authGroup.GET("/movies", h.GetAllMovies)
-		authGroup.GET("/movie/:id", h.GetAllMovies)
+		movies.POST("/", h.CreateMovie)
+		movies.GET("/", h.GetAllMovies)
+		movies.GET("/:id", h.GetMovieById)
+		movies.PUT("/:id", h.UpdateMovies)
+		movies.DELETE("/:id", h.DeleteMovie)
 	}
 
 	return r
 }
 
-// FX Module for API
 var Module = fx.Options(
 	handler.Module,
 	fx.Provide(NewEngine),
