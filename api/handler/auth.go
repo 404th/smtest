@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 	"time"
 
@@ -14,19 +15,20 @@ import (
 func (h *Handler) Register(c *gin.Context) {
 	var req model.User
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		handleErrorResponse(c, err)
 		return
 	}
 
 	isValid, message := validation.ValidateRegister(&req)
 	if !isValid {
-		c.JSON(http.StatusBadRequest, gin.H{"error": message})
+		err := errors.New(message)
+		handleErrorResponse(c, err)
 		return
 	}
 
 	password, err := pkg.HashPassword(req.Password)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		handleErrorResponse(c, err)
 		return
 	}
 	req.Password = password
@@ -35,7 +37,7 @@ func (h *Handler) Register(c *gin.Context) {
 
 	resp, err := h.service.Auth().Register(&ctx, &req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to register"})
+		handleErrorResponse(c, err)
 		return
 	}
 
@@ -45,13 +47,14 @@ func (h *Handler) Register(c *gin.Context) {
 func (h *Handler) Login(c *gin.Context) {
 	var req model.User
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		handleErrorResponse(c, err)
 		return
 	}
 
 	isValid, message := validation.ValidateRegister(&req)
 	if !isValid {
-		c.JSON(http.StatusBadRequest, gin.H{"error": message})
+		err := errors.New(message)
+		handleErrorResponse(c, err)
 		return
 	}
 
@@ -59,7 +62,7 @@ func (h *Handler) Login(c *gin.Context) {
 
 	user, err := h.service.Auth().Login(&ctx, &req)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		handleErrorResponse(c, err)
 		return
 	}
 
@@ -71,7 +74,7 @@ func (h *Handler) Login(c *gin.Context) {
 
 	accessToken, err := token.SignedString([]byte(h.cfg.PasswordSalt))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+		handleErrorResponse(c, err)
 		return
 	}
 

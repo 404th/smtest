@@ -9,3 +9,9 @@ type Metadata struct {
 	Limit uint `json:"limit" default:"10"`
 	Page  uint `json:"page" default:"1"`
 }
+
+type Response struct {
+	Message    string `json:"message"`
+	StatusCode int    `json:"statusCode"`
+	Data       any    `json:"data"`
+}

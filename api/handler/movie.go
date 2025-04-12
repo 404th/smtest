@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/404th/smtest/api/handler/validation"
@@ -11,13 +12,14 @@ import (
 func (h *Handler) CreateMovie(c *gin.Context) {
 	var req model.CreateMovieRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		handleErrorResponse(c, err)
 		return
 	}
 
 	isValid, message := validation.ValidateMovie(&req)
 	if !isValid {
-		c.JSON(http.StatusBadRequest, gin.H{"error": message})
+		err := errors.New(message)
+		handleErrorResponse(c, err)
 		return
 	}
 
@@ -25,7 +27,7 @@ func (h *Handler) CreateMovie(c *gin.Context) {
 
 	resp, err := h.service.Movie().CreateMovie(&ctx, &req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert a movie"})
+		handleErrorResponse(c, err)
 		return
 	}
 
@@ -35,7 +37,7 @@ func (h *Handler) CreateMovie(c *gin.Context) {
 func (h *Handler) GetMovieById(c *gin.Context) {
 	var req model.Id
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		handleErrorResponse(c, err)
 		return
 	}
 
@@ -43,7 +45,7 @@ func (h *Handler) GetMovieById(c *gin.Context) {
 
 	resp, err := h.service.Movie().GetMovieById(&ctx, &req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get a movie"})
+		handleErrorResponse(c, err)
 		return
 	}
 
@@ -53,7 +55,7 @@ func (h *Handler) GetMovieById(c *gin.Context) {
 func (h *Handler) GetAllMovies(c *gin.Context) {
 	var req model.GetAllMoviesRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		handleErrorResponse(c, err)
 		return
 	}
 
@@ -61,7 +63,7 @@ func (h *Handler) GetAllMovies(c *gin.Context) {
 
 	resp, err := h.service.Movie().GetAllMovies(&ctx, &req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get movies"})
+		handleErrorResponse(c, err)
 		return
 	}
 
@@ -71,24 +73,24 @@ func (h *Handler) GetAllMovies(c *gin.Context) {
 func (h *Handler) DeleteMovie(c *gin.Context) {
 	var req model.Id
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		handleErrorResponse(c, err)
 		return
 	}
 
 	ctx := c.Request.Context()
 
 	if err := h.service.Movie().DeleteMovie(&ctx, &req); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get a movie"})
+		handleErrorResponse(c, err)
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "success"})
+	c.JSON(http.StatusCreated, gin.H{"message": "Muvaffaqiyatli o'chirildi"})
 }
 
 func (h *Handler) UpdateMovies(c *gin.Context) {
 	var req model.UpdateMovieRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		handleErrorResponse(c, err)
 		return
 	}
 
@@ -96,7 +98,7 @@ func (h *Handler) UpdateMovies(c *gin.Context) {
 
 	resp, err := h.service.Movie().UpdateMovie(&ctx, &req)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get movies"})
+		handleErrorResponse(c, err)
 		return
 	}
 
