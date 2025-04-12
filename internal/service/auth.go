@@ -6,6 +6,7 @@ import (
 	"github.com/404th/smtest/config"
 	"github.com/404th/smtest/internal/repository"
 	"github.com/404th/smtest/internal/repository/model"
+	"github.com/404th/smtest/pkg"
 )
 
 type authService struct {
@@ -20,20 +21,39 @@ func NewAuthService(cfg *config.Config, authRepository repository.AuthInterface)
 	}
 }
 
-func (a *authService) Register(ctx *context.Context, req *model.RegisterRequest) (resp *model.RegisterResponse, err error) {
-	resp = &model.RegisterResponse{}
-
-	return
-}
-
-func (a *authService) Login(ctx *context.Context, req *model.LoginRequest) (resp *model.LoginResponse, err error) {
-	resp = &model.LoginResponse{}
-
-	return
-}
-
-func (a *authService) GetUser(ctx *context.Context, req *model.GetUserRequest) (resp *model.User, err error) {
+func (a *authService) Register(ctx *context.Context, req *model.User) (resp *model.User, err error) {
 	resp = &model.User{}
+
+	resp, err = a.authRepository.Register(ctx, req)
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (a *authService) Login(ctx *context.Context, req *model.User) (resp *model.User, err error) {
+	resp = &model.User{}
+
+	resp, err = a.authRepository.Login(ctx, req)
+	if err != nil {
+		return
+	}
+
+	if pkg.VerifyPassword(req.Password, resp.Password) != nil {
+		return
+	}
+
+	return
+}
+
+func (a *authService) GetUser(ctx *context.Context, req *model.User) (resp *model.User, err error) {
+	resp = &model.User{}
+
+	resp, err = a.authRepository.GetUser(ctx, req)
+	if err != nil {
+		return
+	}
 
 	return
 }

@@ -27,9 +27,9 @@ type ServiceInterface interface {
 }
 
 type AuthInterface interface {
-	Register(ctx *context.Context, req *model.RegisterRequest) (resp *model.RegisterResponse, err error)
-	Login(ctx *context.Context, req *model.LoginRequest) (resp *model.LoginResponse, err error)
-	GetUser(ctx *context.Context, req *model.GetUserRequest) (resp *model.User, err error)
+	Register(ctx *context.Context, req *model.User) (resp *model.User, err error)
+	Login(ctx *context.Context, req *model.User) (resp *model.User, err error)
+	GetUser(ctx *context.Context, req *model.User) (resp *model.User, err error)
 }
 
 type MovieInterface interface {
