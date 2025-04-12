@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/404th/smtest/config"
@@ -21,6 +22,7 @@ func AuthMiddleware(cfg *config.Config) gin.HandlerFunc {
 		})
 
 		if err != nil || !token.Valid {
+			fmt.Println(err)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Tizimga qayta kiring"})
 			return
 		}

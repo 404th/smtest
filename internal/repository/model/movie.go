@@ -15,13 +15,13 @@ type CreateMovieRequest struct {
 }
 
 type GetAllMoviesRequest struct {
-	Metadata Metadata `json:"metadata"`
-	Search   string   `json:"search"`
+	Metadata *Metadata `json:"metadata"`
+	Search   string    `json:"search"`
 }
 
 type GetAllMoviesResponse struct {
-	Metadata Metadata `json:"metadata" binding:"required"`
-	Movies   []Movie  `json:"movies" binding:"required"`
+	Metadata *Metadata `json:"metadata" binding:"required"`
+	Movies   []Movie   `json:"movies" binding:"required"`
 }
 
 type UpdateMovieRequest struct {

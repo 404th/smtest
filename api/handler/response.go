@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/404th/smtest/internal/repository/model"
 	"github.com/gin-gonic/gin"
@@ -60,6 +61,11 @@ func handleErrorResponse(c *gin.Context, err error) {
 		resp.Message = "Tizimga qayta kiring"
 		statusCode = http.StatusUnauthorized
 
+	case strings.Contains(err.Error(), "already exist"):
+		resp.Data = "bad_request"
+		resp.Message = "Kiritilgan ma'lumot tizimda mavjud"
+		statusCode = http.StatusBadRequest
+
 	case err.Error() == "forbidden":
 		resp.Data = "forbidden"
 		resp.Message = "Ruxsat etilmagan"
@@ -68,6 +74,8 @@ func handleErrorResponse(c *gin.Context, err error) {
 	default:
 		fmt.Printf("Unhandled error: %v\n", err)
 	}
+
+	resp.StatusCode = statusCode
 
 	c.JSON(statusCode, resp)
 }

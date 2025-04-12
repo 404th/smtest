@@ -64,10 +64,39 @@ func (h *Handler) GetMovieById(c *gin.Context) {
 }
 
 func (h *Handler) GetAllMovies(c *gin.Context) {
-	var req model.GetAllMoviesRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	var (
+		req      model.GetAllMoviesRequest
+		metadata model.Metadata
+	)
+
+	limitInt, err := strconv.Atoi(c.Query("limit"))
+	if err != nil {
+		err := errors.New("limit noto'g'ri kiritilgan")
 		handleErrorResponse(c, err)
 		return
+	}
+
+	pageInt, err := strconv.Atoi(c.Query("page"))
+	if err != nil {
+		err := errors.New("page noto'g'ri kiritilgan")
+		handleErrorResponse(c, err)
+		return
+	}
+
+	metadata.Limit = uint(limitInt)
+	metadata.Page = uint(pageInt)
+	req.Metadata = &metadata
+
+	req.Search = c.Query("search")
+
+	if metadata.Limit < 10 {
+		metadata.Limit = 10
+	} else if metadata.Limit > 100 {
+		metadata.Limit = 100
+	}
+
+	if metadata.Page < 1 {
+		metadata.Page = 1
 	}
 
 	ctx := c.Request.Context()
@@ -83,10 +112,15 @@ func (h *Handler) GetAllMovies(c *gin.Context) {
 
 func (h *Handler) DeleteMovie(c *gin.Context) {
 	var req model.Id
-	if err := c.ShouldBindJSON(&req); err != nil {
+
+	idInt, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		err := errors.New("id noto'g'ri formatda kiritilgan")
 		handleErrorResponse(c, err)
 		return
 	}
+
+	req.Id = uint(idInt)
 
 	ctx := c.Request.Context()
 

@@ -75,7 +75,7 @@ func (r *movieRepository) GetAllMovies(ctx *context.Context, req *model.GetAllMo
 	metadata.Limit = uint(req.Metadata.Limit)
 	metadata.Page = uint(req.Metadata.Page)
 
-	resp.Metadata = metadata
+	resp.Metadata = &metadata
 	resp.Movies = movies
 
 	return

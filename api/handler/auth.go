@@ -72,7 +72,7 @@ func (h *Handler) Login(c *gin.Context) {
 		"exp": time.Now().Add(time.Hour * 24).Unix(),
 	})
 
-	accessToken, err := token.SignedString([]byte(h.cfg.PasswordSalt))
+	accessToken, err := token.SignedString([]byte(h.cfg.JWTSecretSalt))
 	if err != nil {
 		handleErrorResponse(c, err)
 		return
