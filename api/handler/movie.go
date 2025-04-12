@@ -70,17 +70,21 @@ func (h *Handler) GetAllMovies(c *gin.Context) {
 	)
 
 	limitInt, err := strconv.Atoi(c.Query("limit"))
-	if err != nil {
+	if err != nil && c.Query("limit") != "" {
 		err := errors.New("limit noto'g'ri kiritilgan")
 		handleErrorResponse(c, err)
 		return
+	} else if c.Query("limit") == "" {
+		limitInt = 1
 	}
 
 	pageInt, err := strconv.Atoi(c.Query("page"))
-	if err != nil {
+	if err != nil && c.Query("page") != "" {
 		err := errors.New("page noto'g'ri kiritilgan")
 		handleErrorResponse(c, err)
 		return
+	} else if c.Query("page") == "" {
+		pageInt = 1
 	}
 
 	metadata.Limit = uint(limitInt)
