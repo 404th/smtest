@@ -30,3 +30,9 @@ type UpdateMovieRequest struct {
 	Director *string `json:"director"`
 	Plot     *string `json:"plot"`
 }
+
+type UpdateMovieRequestSwagger struct {
+	Title    *string `json:"title"`
+	Director *string `json:"director"`
+	Plot     *string `json:"plot"`
+}

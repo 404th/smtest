@@ -2,7 +2,7 @@ package validation
 
 import "github.com/404th/smtest/internal/repository/model"
 
-func ValidateRegister(req *model.User) (bool, string) {
+func ValidateRegister(req *model.RegisterRequest) (bool, string) {
 	if len(req.Username) < 4 {
 		return false, "Username kamida 4 ta belgidan iborat bo'lishi kerak"
 	}

@@ -9,8 +9,11 @@ import (
 )
 
 type Config struct {
-	AppPort string `json:"appPort"`
-	AppHost string `json:"appHost"`
+	AppName       string `json:"appName"`
+	AppPort       string `json:"appPort"`
+	AppHost       string `json:"appHost"`
+	AppHTTPScheme string `json:"appHTTPScheme"`
+	AppVersion    string `json:"appVersion"`
 
 	PostgresName          string `json:"postgresName"`
 	PostgresUsername      string `json:"postgresUsername"`
@@ -37,8 +40,11 @@ func NewConfig() (cfg *Config) {
 
 	migrationPath := "file://" + filepath.Join(wd, "migrations", "postgres")
 
+	cfg.AppName = cast.ToString(getEnvOrSetDefault("APP_NAME", "smtest"))
 	cfg.AppPort = cast.ToString(getEnvOrSetDefault("APP_PORT", "3000"))
 	cfg.AppHost = cast.ToString(getEnvOrSetDefault("APP_HOST", "localhost"))
+	cfg.AppHTTPScheme = cast.ToString(getEnvOrSetDefault("HTTP_SCHEME", "http"))
+	cfg.AppVersion = cast.ToString(getEnvOrSetDefault("APP_VERSION", "0.0.1"))
 
 	cfg.PostgresName = cast.ToString(getEnvOrSetDefault("POSTGRES_NAME", "postgres"))
 	cfg.PostgresUsername = cast.ToString(getEnvOrSetDefault("POSTGRES_USERNAME", "postgres"))

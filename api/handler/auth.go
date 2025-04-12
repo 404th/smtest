@@ -12,8 +12,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Register
+// @ID			register
+// @Router		/register [POST]
+// @Summary		Register Client
+// @Description	Register Client
+// @Tags		auth
+// @Accept		json
+// @Produce		json
+// @Param		object	body		model.RegisterRequest	true	"RegisterRequest"
+// @Success		200		{object}	model.Response{date=model.User}	"Response"
+// @Response	400		{object}	model.Response{}				"Invalid Argument"
+// @Failure		500		{object}	model.Response{}				"Server Error"
 func (h *Handler) Register(c *gin.Context) {
-	var req model.User
+	var req model.RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		handleErrorResponse(c, err)
 		return
@@ -35,23 +47,46 @@ func (h *Handler) Register(c *gin.Context) {
 
 	ctx := c.Request.Context()
 
-	resp, err := h.service.Auth().Register(&ctx, &req)
+	resp, err := h.service.Auth().Register(&ctx, &model.User{
+		Username: req.Username,
+		Password: req.Password,
+	})
 	if err != nil {
 		handleErrorResponse(c, err)
 		return
 	}
 
-	c.JSON(http.StatusCreated, resp)
+	c.JSON(http.StatusCreated, model.Response{
+		Message:    "OK",
+		StatusCode: http.StatusOK,
+		Data:       resp,
+	})
 }
 
+// Login
+// @ID			login
+// @Router		/login [POST]
+// @Summary		Login Client
+// @Description	Login Client
+// @Tags		auth
+// @Accept		json
+// @Produce		json
+// @Param		object	body		model.LoginRequest				true			"User"
+// @Success		200		{object}	model.Response{data=model.User}					"Response"
+// @Response	400		{object}	model.Response{}								"Invalid Argument"
+// @Response	404		{object}	model.Response{}								"Invalid Argument"
+// @Failure		500		{object}	model.Response{}								"Server Error"
 func (h *Handler) Login(c *gin.Context) {
-	var req model.User
+	var req model.LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		handleErrorResponse(c, err)
 		return
 	}
 
-	isValid, message := validation.ValidateRegister(&req)
+	isValid, message := validation.ValidateRegister(&model.RegisterRequest{
+		Username: req.Username,
+		Password: req.Password,
+	})
 	if !isValid {
 		err := errors.New(message)
 		handleErrorResponse(c, err)
@@ -60,7 +95,10 @@ func (h *Handler) Login(c *gin.Context) {
 
 	ctx := c.Request.Context()
 
-	user, err := h.service.Auth().Login(&ctx, &req)
+	user, err := h.service.Auth().Login(&ctx, &model.User{
+		Username: req.Username,
+		Password: req.Password,
+	})
 	if err != nil {
 		handleErrorResponse(c, err)
 		return

@@ -1,4 +1,4 @@
-.PHONY: build run test migrate-up migrate-down migrate-create
+.PHONY: build run test migrate-up migrate-down migrate-create swag-init
 
 build:
 	go build -o bin/smtest ./cmd
@@ -18,3 +18,6 @@ migrate-down:
 migrate-create:
 	@read -p "Enter migration name: " name; \
 	migrate create -ext sql -dir migrations/postgres -seq $$name
+
+swag-init:
+	swag init -g api/api.go -o api/docs

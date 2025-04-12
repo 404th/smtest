@@ -10,6 +10,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CreateMovie
+// @ID			createMovie
+// @Security	ApiKeyAuth
+// @Router		/movies [POST]
+// @Summary		Create Movie
+// @Description	Create Movie
+// @Tags		movies
+// @Accept		json
+// @Produce		json
+// @Param		object	body		model.CreateMovieRequest		true			"User"
+// @Success		200		{object}	model.Response{data=model.Id}					"Response"
+// @Response	400		{object}	model.Response{}								"Invalid Argument"
+// @Response	404		{object}	model.Response{}								"Invalid Argument"
+// @Failure		500		{object}	model.Response{}								"Server Error"
 func (h *Handler) CreateMovie(c *gin.Context) {
 	var req model.CreateMovieRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -35,6 +49,20 @@ func (h *Handler) CreateMovie(c *gin.Context) {
 	c.JSON(http.StatusCreated, resp)
 }
 
+// GetMovieById
+// @ID			getMovieById
+// @Security	ApiKeyAuth
+// @Router		/movies/{id} [GET]
+// @Summary		Get Movie By Id
+// @Description	Get Movie By Id
+// @Tags		movies
+// @Accept		json
+// @Produce		json
+// @Param		id		path		string									true	"id"
+// @Success		200		{object}	model.Response{data=model.User}					"Response"
+// @Response	400		{object}	model.Response{}								"Invalid Argument"
+// @Response	404		{object}	model.Response{}								"Invalid Argument"
+// @Failure		500		{object}	model.Response{}								"Server Error"
 func (h *Handler) GetMovieById(c *gin.Context) {
 	var req model.Id
 	if c.Param("id") == "" {
@@ -63,6 +91,22 @@ func (h *Handler) GetMovieById(c *gin.Context) {
 	c.JSON(http.StatusCreated, resp)
 }
 
+// GetAllMovies
+// @ID			getAllMovies
+// @Security	ApiKeyAuth
+// @Router		/movies [GET]
+// @Summary		Get All Movies
+// @Description	Get All Movies
+// @Tags		movies
+// @Accept		json
+// @Produce		json
+// @Param		offset	query		integer									false	"page"
+// @Param		limit	query		integer									false	"limit"
+// @Param		search	query		string									false	"search"
+// @Success		200		{object}	model.Response{data=model.GetAllMoviesResponse}	"Response"
+// @Response	400		{object}	model.Response{}								"Invalid Argument"
+// @Response	404		{object}	model.Response{}								"Invalid Argument"
+// @Failure		500		{object}	model.Response{}								"Server Error"
 func (h *Handler) GetAllMovies(c *gin.Context) {
 	var (
 		req      model.GetAllMoviesRequest
@@ -114,6 +158,20 @@ func (h *Handler) GetAllMovies(c *gin.Context) {
 	c.JSON(http.StatusCreated, resp)
 }
 
+// DeleteMovie
+// @ID			deleteMovie
+// @Security	ApiKeyAuth
+// @Router		/movies/{id} [DELETE]
+// @Summary		Delete Movie
+// @Description	Delete Movie
+// @Tags		movies
+// @Accept		json
+// @Produce		json
+// @Param		id		path		string									true	"id"
+// @Success		200		{object}	model.Response{data=nil}						"Response"
+// @Response	400		{object}	model.Response{}								"Invalid Argument"
+// @Response	404		{object}	model.Response{}								"Invalid Argument"
+// @Failure		500		{object}	model.Response{}								"Server Error"
 func (h *Handler) DeleteMovie(c *gin.Context) {
 	var req model.Id
 
@@ -136,6 +194,21 @@ func (h *Handler) DeleteMovie(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Muvaffaqiyatli o'chirildi"})
 }
 
+// UpdateMovies
+// @ID			updateMovies
+// @Security	ApiKeyAuth
+// @Router		/movies/{id} [PUT]
+// @Summary		Update Movie
+// @Description	Update Movie
+// @Tags		movies
+// @Accept		json
+// @Produce		json
+// @Param		id		path		string								true		"Id"
+// @Param		object	body		model.UpdateMovieRequestSwagger		true		"UpdateMovieRequest"
+// @Success		200		{object}	model.Response{data=model.Movie}				"Response"
+// @Response	400		{object}	model.Response{}								"Invalid Argument"
+// @Response	404		{object}	model.Response{}								"Invalid Argument"
+// @Failure		500		{object}	model.Response{}								"Server Error"
 func (h *Handler) UpdateMovies(c *gin.Context) {
 	var req model.UpdateMovieRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
